@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.FixDao">
+
+    <resultMap id="fixResultMap" type="entity.Fix">
+        <id property="id" column="id"/>
+        <result property="fixTime" column="fixTime"/>
+        <result property="fixStatus" column="fixStatus"/>
+        <result property="fixNote" column="fixNote"/>
+
+
+        <association property="admin" javaType="entity.Admin">
+            <id property="admin_id" column="admin_id"/>
+            <result property="username" column="username"/>
+        </association>
+        <association property="dormitory" javaType="entity.Dormitory">
+            <id property="dormitoryId" column="dormitoryId"/>
+            <result property="dormitoryNumber" column="dormitoryNumber"/>
+        </association>
+
+    </resultMap>
+
+    <select id="getFixList" resultMap="fixResultMap">
+        select * from tb_fix ,tb_admin,tb_dormitory
+        where tb_fix.fixPepoleId=tb_admin.admin_id and tb_fix.dormitoryId=tb_dormitory.dormitoryId
+    </select>
+
+    <insert id="insertFix" parameterType="entity.Fix">
+        insert into tb_fix(fixTime, dormitoryId, fixPepoleId, fixStatus,fixNote)
+        VALUES(#{fixTime},#{dormitoryId},#{fixPepoleId},#{fixStatus},#{fixNote})
+    </insert>
+
+    <select id="getFixById" resultType="entity.Fix">
+        select * from tb_fix where id=#{id}
+    </select>
+
+    <update id="updateFix" parameterType="entity.Fix">
+        update tb_fix
+        <set>
+            <if test="fixTime!=null">
+                fixTime=#{fixTime},
+            </if>
+            <if test="fixPepoleId!=null">
+                fixPepoleId=#{fixPepoleId},
+            </if>
+            <if test="dormitoryId!=null">
+                dormitoryId=#{dormitoryId},
+            </if>
+            <if test="fixStatus!=null">
+                fixStatus=#{fixStatus},
+            </if>
+            <if test="fixNote!=null">
+                fixNote=#{fixNote}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="delFixById">
+        delete from tb_fix where id=#{id}
+    </delete>
+
+</mapper>

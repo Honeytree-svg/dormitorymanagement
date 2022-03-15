@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.WanguiDao">
+    <select id="getWanguiList" resultMap="wanguiResultMap">
+        select * from tb_wangui,tb_dormitory,tb_student where tb_wangui.dormitoryId=tb_dormitory.dormitoryId and tb_wangui.studentId=tb_student.id
+    </select>
+
+    <resultMap id="wanguiResultMap" type="entity.Wangui">
+        <id property="id" column="id"/>
+        <result property="wanguiTime" column="wanguiTime"/>
+        <association property="student" javaType="entity.Student">
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+        </association>
+        <association property="dormitory" javaType="entity.Dormitory">
+            <id property="dormitoryId" column="dormitoryId"/>
+            <result property="dormitoryNumber" column="dormitoryNumber"/>
+        </association>
+
+    </resultMap>
+
+    <insert id="insertWangui" parameterType="entity.Wangui" >
+        insert into tb_wangui(wanguiTime, dormitoryId, studentId)
+        VALUES(#{wanguiTime},#{dormitoryId},#{studentId})
+    </insert>
+
+    <select id="getWanguiById" parameterType="Integer" resultMap="wanguiResultMap">
+        select * from tb_wangui w,tb_dormitory d,tb_student s where w.dormitoryId=d.dormitoryId and w.studentId=s.id and w.id=#{Id}
+    </select>
+
+    <delete id="delWanguiById">
+        delete from tb_wangui where id=#{id}
+    </delete>
+</mapper>

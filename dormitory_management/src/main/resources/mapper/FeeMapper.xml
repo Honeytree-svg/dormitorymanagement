@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.FeeDao">
+    <select id="getFeeList" resultMap="feeResultMap">
+        select * from tb_dormitory
+    </select>
+
+    <resultMap id="feeResultMap" type="entity.Fee">
+        <id property="dormitoryId" column="dormitoryId"/>
+        <result property="fee" column="fee"/>
+        <result property="dormitory.dormitoryNumber" column="dormitoryNumber"/>
+
+    </resultMap>
+
+    <update id="updateFee" parameterType="entity.Fee">
+        update tb_dormitory
+        <set>
+            <if test="fee!=null">
+                fee=#{fee},
+            </if>
+        </set>
+        where dormitoryId=#{dormitoryId}
+    </update>
+
+    <select id="getFeeById" parameterType="Integer" resultMap="feeResultMap">
+        select * from tb_dormitory where dormitoryId=#{Id}
+    </select>
+</mapper>
